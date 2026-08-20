@@ -1,0 +1,61 @@
+---
+import LangSwitcher from '../components/LangSwitcher.astro';
+import { useTranslations, type Locale } from '../i18n/ui';
+import '../styles/global.css';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description?: string;
+  /** Path within the locale, used to build the language-switcher links */
+  path: string;
+}
+
+const { locale, title, description, path } = Astro.props;
+const dir = locale === 'ar' ? 'rtl' : 'ltr';
+const t = useTranslations(locale);
+
+const nav: Array<{ href: string; label: string }> = [
+  { href: `/notes-lecture`, label: t('nav.notesLecture') },
+  { href: `/reecoute`, label: t('nav.reecoute') },
+  { href: `/blog`, label: t('nav.blog') },
+  { href: `/themes`, label: t('nav.themes') }
+];
+
+import { getRelativeLocaleUrl } from 'astro:i18n';
+---
+
+<!doctype html>
+<html lang={locale} dir={dir}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title} — {t('siteName')}</title>
+    {description && <meta name="description" content={description} />}
+    <span data-pagefind-filter="locale" style="display:none">{locale}</span>
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="site-header__inner">
+        <a class="site-name" href={getRelativeLocaleUrl(locale, '/')}>{t('siteName')}</a>
+        <ul class="site-nav">
+          {
+            nav.map((item) => (
+              <li>
+                <a href={getRelativeLocaleUrl(locale, item.href)}>{item.label}</a>
+              </li>
+            ))
+          }
+          <li>
+            <a href={getRelativeLocaleUrl(locale, '/search')}>{t('nav.search')}</a>
+          </li>
+        </ul>
+        <LangSwitcher currentLocale={locale} path={path} />
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">{t('tagline')}</footer>
+  </body>
+</html>

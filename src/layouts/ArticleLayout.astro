@@ -1,0 +1,38 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Locale } from '../i18n/ui';
+
+interface Props {
+  locale: Locale;
+  path: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  tags: string[];
+}
+
+const { locale, path, title, description, pubDate, tags } = Astro.props;
+
+const dateFormatter = new Intl.DateTimeFormat(locale, { dateStyle: 'long' });
+---
+
+<BaseLayout locale={locale} path={path} title={title} description={description}>
+  <article data-pagefind-body>
+    <header>
+      <h1>{title}</h1>
+      <p class="entry-list__meta">
+        <time datetime={pubDate.toISOString()}>{dateFormatter.format(pubDate)}</time>
+      </p>
+      {
+        tags.length > 0 && (
+          <p>
+            {tags.map((tag) => (
+              <span class="tag">{tag}</span>
+            ))}
+          </p>
+        )
+      }
+    </header>
+    <slot />
+  </article>
+</BaseLayout>

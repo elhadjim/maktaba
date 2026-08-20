@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Search from 'astro-pagefind/components/Search.astro';
+import { useTranslations } from '../i18n/ui';
+
+const locale = 'fr' as const;
+const t = useTranslations(locale);
+---
+
+<BaseLayout locale={locale} path="/search" title={t('nav.search')}>
+  <h1>{t('nav.search')}</h1>
+  <Search
+    searchboxOptions={{
+      placeholder: t('search.placeholder'),
+      filters: { locale }
+    }}
+  />
+</BaseLayout>

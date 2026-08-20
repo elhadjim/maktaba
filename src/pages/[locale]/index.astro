@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SECTION_SLUGS } from '../../lib/sections';
+import { useTranslations, sectionLabels, type Locale } from '../../i18n/ui';
+
+export function getStaticPaths() {
+  return (['ar', 'en'] as const).map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params as { locale: Locale };
+const t = useTranslations(locale);
+const labels = sectionLabels(locale);
+---
+
+<BaseLayout locale={locale} path="/" title={t('siteName')} description={t('tagline')}>
+  <h1>{t('siteName')}</h1>
+  <p>{t('tagline')}</p>
+  <ul class="entry-list">
+    {
+      SECTION_SLUGS.map((section) => (
+        <li class="entry-list__item">
+          <h2>
+            <a href={`/${locale}/${section}`}>{labels[section]}</a>
+          </h2>
+        </li>
+      ))
+    }
+  </ul>
+</BaseLayout>

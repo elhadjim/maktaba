@@ -1,0 +1,55 @@
+---
+import { getCollection, render } from 'astro:content';
+import { slugFromId } from '../../lib/content-helpers';
+import { SECTIONS, SECTION_SLUGS, type SectionSlug } from '../../lib/sections';
+
+export async function getStaticPaths() {
+  const locale = 'fr';
+  const paths = [];
+  for (const section of SECTION_SLUGS) {
+    const entries = await getCollection(
+      SECTIONS[section],
+      (entry) => entry.id.startsWith(`${locale}/`) && !entry.data.draft
+    );
+    for (const entry of entries) {
+      paths.push({ params: { section, slug: slugFromId(entry.id) }, props: { entry } });
+    }
+  }
+  return paths;
+}
+
+const { section, slug } = Astro.params as { section: SectionSlug; slug: string };
+const { entry } = Astro.props;
+const locale = 'fr' as const;
+const path = `/${section}/${slug}`;
+
+// Dynamic import keeps reveal.js's JS/CSS out of every non-slide-deck page's bundle.
+const isSlideDeck = entry.data.isSlideDeck;
+const Content = isSlideDeck ? null : (await render(entry)).Content;
+const Layout = isSlideDeck
+  ? (await import('../../layouts/SlideLayout.astro')).default
+  : (await import('../../layouts/ArticleLayout.astro')).default;
+---
+
+{
+  isSlideDeck ? (
+    <Layout
+      locale={locale}
+      path={path}
+      title={entry.data.title}
+      description={entry.data.description}
+      body={entry.body ?? ''}
+    />
+  ) : (
+    <Layout
+      locale={locale}
+      path={path}
+      title={entry.data.title}
+      description={entry.data.description}
+      pubDate={entry.data.pubDate}
+      tags={entry.data.tags}
+    >
+      {Content && <Content />}
+    </Layout>
+  )
+}
