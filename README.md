@@ -1,43 +1,39 @@
-# Astro Starter Kit: Minimal
+# Maktaba
 
-```sh
-npm create astro@latest -- --template minimal
-```
+Site personnel multilingue (FR/AR/EN) pour notes de lecture, réécoutes, blog et thèmes de conférence — avec support des diaporamas (reveal.js).
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Stack
 
-## 🚀 Project Structure
+- [React](https://react.dev) + [Vite](https://vite.dev) (SPA)
+- [React Router](https://reactrouter.com) pour le routage, y compris le préfixe de locale (`fr` sans préfixe, `/ar`, `/en`)
+- [Tailwind CSS v4](https://tailwindcss.com) + design tokens custom (thème clair/sombre)
+- Contenu en MDX, chargé via `import.meta.glob` (voir `src/lib/content.ts`)
+- [reveal.js](https://revealjs.com) pour les diaporamas
 
-Inside of your Astro project, you'll see the following folders and files:
+## Structure
 
 ```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+src/
+├── content/<section>/slug.<locale>.mdx   # contenu (frontmatter: title, description, pubDate, tags, isSlideDeck)
+├── components/                           # Header, LangSwitcher, ThemeToggle, CardGrid, SlideDeck…
+├── pages/                                # Home, SectionList, Article, SearchPage
+├── lib/
+│   ├── content.ts                        # registre de contenu (remplace les content collections Astro)
+│   ├── routing.ts                        # résolution d'URL -> { locale, section, slug }
+│   └── sections.ts
+└── i18n/ui.ts                            # dictionnaire de traductions
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Commandes
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+| Commande          | Action                                    |
+| :---------------- | :----------------------------------------- |
+| `npm install`      | Installe les dépendances                   |
+| `npm run dev`       | Démarre le serveur de dev (`localhost:5173`) |
+| `npm run build`     | Build de production dans `./dist/`         |
+| `npm run preview`   | Prévisualise le build de production        |
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Notes
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- La recherche (`/search`) est un filtre côté client sur titre/description/tags — ce n'est plus Pagefind (qui indexe du HTML statique et ne convient pas à une SPA).
+- Ajouter un contenu : créer `src/content/<section>/mon-slug.<locale>.mdx` avec le frontmatter attendu ; `isSlideDeck: true` bascule le rendu vers reveal.js (slides séparées par `---`, verticales par `--`).

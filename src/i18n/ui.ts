@@ -1,4 +1,4 @@
-export const LOCALES = ['fr', 'ar', 'en'] as const;
+export const LOCALES = ['fr'] as const;
 export type Locale = (typeof LOCALES)[number];
 export const DEFAULT_LOCALE: Locale = 'fr';
 
@@ -13,31 +13,13 @@ export const ui = {
     'nav.search': 'Recherche',
     'search.placeholder': 'Rechercher…',
     'section.empty': 'Aucun contenu pour le moment.',
-    'article.slides.open': 'Ouvrir en diaporama'
-  },
-  ar: {
-    siteName: 'مكتبة',
-    tagline: 'ملاحظات وقراءات ومحاور المحاضرات',
-    'nav.notesLecture': 'ملاحظات القراءة',
-    'nav.reecoute': 'إعادة الاستماع',
-    'nav.blog': 'المدونة',
-    'nav.themes': 'المحاور',
-    'nav.search': 'بحث',
-    'search.placeholder': 'ابحث…',
-    'section.empty': 'لا يوجد محتوى بعد.',
-    'article.slides.open': 'فتح كعرض شرائح'
-  },
-  en: {
-    siteName: 'Maktaba',
-    tagline: 'Notes, readings and conference themes',
-    'nav.notesLecture': 'Reading notes',
-    'nav.reecoute': 'Re-listening',
-    'nav.blog': 'Blog',
-    'nav.themes': 'Themes',
-    'nav.search': 'Search',
-    'search.placeholder': 'Search…',
-    'section.empty': 'No content yet.',
-    'article.slides.open': 'Open as slide deck'
+    'article.slides.open': 'Ouvrir en diaporama',
+    'hero.eyebrow': 'Bibliothèque personnelle',
+    'card.open': 'Explorer',
+    'desc.notes-lecture': 'Résumés et réflexions sur les livres lus.',
+    'desc.reecoute': 'Notes prises en réécoutant podcasts et conférences.',
+    'desc.blog': 'Billets et réflexions au fil de l’eau.',
+    'desc.themes': 'Sujets approfondis pour mes interventions.'
   }
 } as const;
 
@@ -56,5 +38,15 @@ export function sectionLabels(locale: Locale) {
     reecoute: t('nav.reecoute'),
     blog: t('nav.blog'),
     themes: t('nav.themes')
+  } as const;
+}
+
+export function sectionDescriptions(locale: Locale) {
+  const t = useTranslations(locale);
+  return {
+    'notes-lecture': t('desc.notes-lecture'),
+    reecoute: t('desc.reecoute'),
+    blog: t('desc.blog'),
+    themes: t('desc.themes')
   } as const;
 }
