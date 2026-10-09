@@ -451,6 +451,28 @@ article :where(p, ul, ol),
   color: var(--text-sub);
 }
 
+/* Tailwind's preflight resets paragraph margins; restore breathing room for prose. */
+article > p {
+  margin-block: 0 1.35rem;
+  line-height: 1.85;
+}
+
+/* Ornamental section break: a centered gold glyph between thin rules. */
+article > hr {
+  border: 0;
+  margin: 2.5rem auto;
+  text-align: center;
+  overflow: visible;
+  color: var(--gold);
+}
+
+article > hr::after {
+  content: '✦  ✦  ✦';
+  white-space: pre;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+}
+
 /* Tailwind's preflight resets list-style to none; restore it for prose content. */
 article :where(ul, ol),
 .slide-card :where(ul, ol) {
